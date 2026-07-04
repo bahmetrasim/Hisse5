@@ -177,7 +177,6 @@ with col1:
 with col2:
     btn_tum_liste = st.button("Kutu + Full Listeyi Tara", use_container_width=True)
 
-
 # İki butondan herhangi birine basılırsa tarama tetiklenir
 if btn_sadece_kutu or btn_tum_liste:
     
@@ -243,31 +242,47 @@ if btn_sadece_kutu or btn_tum_liste:
                 target_price = info.get('targetMeanPrice', 0)
                 target_price = target_price if target_price is not None else 0
 
+                # --- ORTAK TEKNİK VERİLER (TABLOLAR İÇİN DE KULLANILACAK) ---
                 high = df['High']
                 low = df['Low']
-                rsi = hesapla_rsi(close)
-                stoch = hesapla_stokastik(high, low, close)
-                ema9 = close.ewm(span=9, adjust=False).mean()
-                ema21 = close.ewm(span=21, adjust=False).mean()
+                rsi_serisi = hesapla_rsi(close)
+                stoch_serisi = hesapla_stokastik(high, low, close)
+                ema9_serisi = close.ewm(span=9, adjust=False).mean()
+                ema21_serisi = close.ewm(span=21, adjust=False).mean()
                 
-                # UYGUNLAR 1 & 2 
-                if (0 < pb <= 1.5) and (0 < peg <= 1) and (rsi.iloc[-1] <= 40) and (stoch.iloc[-1] <= 20):
-                    uygunlar1.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
+                # Son gün verileri
+                son_rsi = round(float(rsi_serisi.iloc[-1]), 2)
+                son_stoch = round(float(stoch_serisi.iloc[-1]), 2)
+                son_ema9 = round(float(ema9_serisi.iloc[-1]), 2)
+                
+                # --- UYGUNLAR 1 & 2 ---
+                if (0 < pb <= 1.5) and (0 < peg <= 1) and (son_rsi <= 40) and (son_stoch <= 20):
+                    uygunlar1.append({
+                        "Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg,
+                        "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
+                    })
                 
                 if (0 < pb <= 1.5) and (0 < peg <= 1) and \
-                   (float(ema9.iloc[-2]) <= float(ema21.iloc[-2])) and (float(ema9.iloc[-1]) > float(ema21.iloc[-1])) and \
-                   (rsi.iloc[-7:].min() <= 40) and (stoch.iloc[-7:].min() <= 20):
-                    uygunlar2.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
+                   (float(ema9_serisi.iloc[-2]) <= float(ema21_serisi.iloc[-2])) and (float(ema9_serisi.iloc[-1]) > float(ema21_serisi.iloc[-1])) and \
+                   (rsi_serisi.iloc[-7:].min() <= 40) and (stoch_serisi.iloc[-7:].min() <= 20):
+                    uygunlar2.append({
+                        "Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg,
+                        "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
+                    })
 
-                # UYGUNLAR 3 (Liste 1)
+                # --- UYGUNLAR 3 (Liste 1) ---
                 if (ev_ebitda <= 10) and (fcf_yield >= 0.08):
                     mfi_s = hesapla_mfi(df)
                     if not mfi_s.empty and mfi_s.iloc[-1] <= 20:
                         piotroski_score = hesapla_piotroski(ticker_obj)
                         if piotroski_score >= 7:
-                            uygunlar3.append({"Sembol": ticker, "Fiyat": son_kapanis, "EV/EBITDA": round(ev_ebitda, 2), "FCF Y.": round(fcf_yield, 3), "F-Skor": piotroski_score})
+                            uygunlar3.append({
+                                "Sembol": ticker, "Fiyat": son_kapanis, "EV/EBITDA": round(ev_ebitda, 2), 
+                                "FCF Y.": round(fcf_yield, 3), "F-Skor": piotroski_score,
+                                "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
+                            })
 
-                # UYGUNLAR 4 (Liste 2)
+                # --- UYGUNLAR 4 (Liste 2) ---
                 if short_float >= 0.15 and (insiders >= 0.05 or target_price >= son_kapanis * 1.30):
                     bbu, bbl = hesapla_bbands(close)
                     kcu, kcl = hesapla_keltner(df)
@@ -278,10 +293,14 @@ if btn_sadece_kutu or btn_tum_liste:
                         momentum_pozitif = son_kapanis > close.rolling(20).mean().iloc[-1]
                         
                         if squeeze_fired and momentum_pozitif:
-                            uygunlar4.append({"Sembol": ticker, "Fiyat": son_kapanis, "Short Float": round(short_float, 2), "Insiders": round(insiders, 3)})
+                            uygunlar4.append({
+                                "Sembol": ticker, "Fiyat": son_kapanis, "Short Float": round(short_float, 2), 
+                                "Insiders": round(insiders, 3),
+                                "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
+                            })
                 
-                # UYGUNLAR 5 (Liste 3)
-                if (float(ema9.iloc[-2]) <= float(ema21.iloc[-2])) and (float(ema9.iloc[-1]) > float(ema21.iloc[-1])):
+                # --- UYGUNLAR 5 (Liste 3) ---
+                if (float(ema9_serisi.iloc[-2]) <= float(ema21_serisi.iloc[-2])) and (float(ema9_serisi.iloc[-1]) > float(ema21_serisi.iloc[-1])):
                     macdh = hesapla_macd(close)
                     if not macdh.empty:
                         son_20 = df[-20:]
@@ -292,22 +311,22 @@ if btn_sadece_kutu or btn_tum_liste:
                         if (son_20['Close'].min() < onceki_20['Close'].min()) and (macdh_son20.min() > macdh_onceki20.min()):
                             z_score = hesapla_altman_z(ticker_obj, market_cap)
                             if z_score >= 3.0:
-                                uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
+                                uygunlar5.append({
+                                    "Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2),
+                                    "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
+                                })
                                 
-                # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
-                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 50) and (stoch.iloc[-1] <= 35):
+                # --- UYGUNLAR 6: Esnek Fırsat Avcısı ---
+                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (son_rsi <= 50):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
                     if p_skor >= 5 and z_skor >= 1.8:
                         uygunlar6.append({
-                            "Sembol": ticker, 
-                            "Fiyat": son_kapanis, 
-                            "P/B": round(pb, 2), 
-                            "PEG": round(peg, 2),
-                            "EV/EB": round(ev_ebitda, 1),
-                            "F-Skor": p_skor,
-                            "Z-Skor": round(z_skor, 2)
+                            "Sembol": ticker, "Fiyat": son_kapanis, "P/B": round(pb, 2), 
+                            "PEG": round(peg, 2), "EV/EB": round(ev_ebitda, 1),
+                            "F-Skor": p_skor, "Z-Skor": round(z_skor, 2),
+                            "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
                         })
                         
             except: continue
