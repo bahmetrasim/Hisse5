@@ -5,6 +5,14 @@ import time
 import warnings
 warnings.filterwarnings("ignore")
 
+# Z-Skorunun 3.0'ın üzerinde olması şirketin "Güvenli Bölge"de (Safe Zone) olduğunu,
+# 1.8 ile 3.0 arasının riskin başladığı "Gri Bölge"yi (Grey Zone),
+# 1.8'in altının ise yüksek iflas riskini (Distress) temsil ettiğini göstermektedi
+
+# F-Skoru 7, 8 veya 9 olan 50 USD altındaki hisseler, piyasanın korkusuna rağmen olağanüstü defansif yapılara ve iyileşen bir iş modeline sahiptir.
+# P/B ortalama 5
+# 
+
 # --- İNDİKATÖR & FİNANSAL FONKSİYONLAR (SAF PANDAS İLE) ---
 def hesapla_rsi(veri, periyot=14):
     fark = veri.diff()
@@ -212,12 +220,12 @@ if st.button("Taramayı Başlat"):
                 ema21 = close.ewm(span=21, adjust=False).mean()
                 
                 # UYGUNLAR 1 & 2 
-                if (0 < pb < 1) and (0 < peg < 1) and (rsi.iloc[-1] <= 40) and (stoch.iloc[-1] <= 20):
+                if (0 < pb <= 2) and (0 < peg <= 1.2) and (rsi.iloc[-1] <= 50) and (stoch.iloc[-1] <= 30):
                     uygunlar1.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
                 
-                if (0 < pb < 1) and (0 < peg < 1) and \
+                if (0 < pb <=2 1) and (0 < peg <= 1.2) and \
                    (float(ema9.iloc[-2]) <= float(ema21.iloc[-2])) and (float(ema9.iloc[-1]) > float(ema21.iloc[-1])) and \
-                   (rsi.iloc[-7:].min() <= 40) and (stoch.iloc[-7:].min() <= 20):
+                   (rsi.iloc[-7:].min() <= 50) and (stoch.iloc[-7:].min() <= 30):
                     uygunlar2.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
 
                 # UYGUNLAR 3 (Liste 1)
@@ -256,7 +264,7 @@ if st.button("Taramayı Başlat"):
                                 uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
 
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
-                if (0 < pb <= 1.5) and (0 < peg <= 1.2) and (ev_ebitda <= 13) and (rsi.iloc[-1] <= 50):
+                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 13) and (rsi.iloc[-1] <= 50):
                     # API'yi yormamak için sadece bu temel ön filtreleri geçenlerin bilançosunu çekiyoruz
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
