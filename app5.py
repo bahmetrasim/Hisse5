@@ -158,7 +158,7 @@ st.set_page_config(page_title="Anayasa v17", layout="centered")
 st.title("Yatırım Anayasası v17 (Sıfır Bağımlılık)")
 
 if st.button("Taramayı Başlat"):
-    uygunlar1, uygunlar2, uygunlar3, uygunlar4, uygunlar5 = [], [], [], [], []
+    uygunlar1, uygunlar2, uygunlar3, uygunlar4, uygunlar5, uygunlar6 = [], [], [], [], [], []
     paket_sayisi = len(FULL_LIST) // 50 + (1 if len(FULL_LIST) % 50 != 0 else 0)
     
     progress_bar = st.progress(0)
@@ -254,6 +254,23 @@ if st.button("Taramayı Başlat"):
                             z_score = hesapla_altman_z(ticker_obj, market_cap)
                             if z_score >= 3.0:
                                 uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
+
+                # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
+                if (0 < pb <= 1.5) and (0 < peg <= 1.2) and (ev_ebitda <= 13) and (rsi.iloc[-1] <= 50):
+                    # API'yi yormamak için sadece bu temel ön filtreleri geçenlerin bilançosunu çekiyoruz
+                    p_skor = hesapla_piotroski(ticker_obj)
+                    z_skor = hesapla_altman_z(ticker_obj, market_cap)
+                    
+                    if p_skor >= 5 and z_skor >= 1.8:
+                        uygunlar6.append({
+                            "Sembol": ticker, 
+                            "Fiyat": son_kapanis, 
+                            "P/B": round(pb, 2), 
+                            "PEG": round(peg, 2),
+                            "EV/EB": round(ev_ebitda, 1),
+                            "F-Skor": p_skor,
+                            "Z-Skor": round(z_skor, 2)
+                        })
                         
             except: continue
         time.sleep(5)
@@ -278,3 +295,6 @@ if st.button("Taramayı Başlat"):
     
     st.subheader(f"5. Zırhlı Trend Dönüşü - Liste 3 ({len(uygunlar5)} Hisse)")
     st.dataframe(pd.DataFrame(uygunlar5), width='stretch')
+
+    st.subheader(f"6. Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ({len(uygunlar6)} Hisse)")
+    st.dataframe(pd.DataFrame(uygunlar6), width='stretch')
