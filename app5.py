@@ -317,7 +317,7 @@ if btn_sadece_kutu or btn_tum_liste:
                                 })
                                 
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı ---
-                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (son_rsi <= 50):
+                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (son_rsi <= 50) and (son_stoch <= 40):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
