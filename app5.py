@@ -164,20 +164,37 @@ FULL_LIST = [
 st.set_page_config(page_title="Anayasa v17", layout="centered")
 st.title("Yatırım Anayasası v17 (Özel Sembol Destekli)")
 
-# KULLANICI GİRDİSİ (YENİ EKLENDİ)
+# KULLANICI GİRDİSİ 
 ek_semboller_metni = st.text_input(
     "Listeye Eklemek İstediğiniz Semboller (Virgülle ayırın):", 
     placeholder="Örn: WDOFF, PLTR, BIST:THYAO"
 )
 
-if st.button("Taramayı Başlat"):
-    # 1. Kullanıcıdan gelen sembolleri temizle ve büyüt
+# YAN YANA İKİ BUTON TASARIMI
+col1, col2 = st.columns(2)
+with col1:
+    btn_sadece_kutu = st.button("Sadece Kutudakileri Tara", use_container_width=True)
+with col2:
+    btn_tum_liste = st.button("Kutu + Full Listeyi Tara", use_container_width=True)
+
+
+# İki butondan herhangi birine basılırsa tarama tetiklenir
+if btn_sadece_kutu or btn_tum_liste:
+    
+    # Metin kutusundaki veriyi temizleyip listeye çevir
     girilen_semboller = [s.strip().upper() for s in ek_semboller_metni.split(',') if s.strip()]
     
-    # 2. Girilen sembolleri FULL_LIST'in başına ekle ve kopyaları sil (dict.fromkeys sırayı korur)
-    nihai_liste = list(dict.fromkeys(girilen_semboller + FULL_LIST))
+    # Hangi butonun basıldığına göre nihai listeyi belirle
+    if btn_sadece_kutu:
+        nihai_liste = list(dict.fromkeys(girilen_semboller))
+        if len(nihai_liste) == 0:
+            st.warning("⚠️ Lütfen taramak için kutuya en az bir sembol girin!")
+            st.stop() # Hata vermemek için kodun aşağıya inmesini engeller
+    else:
+        # Full liste butonu basıldıysa ikisini birleştirip kopyaları sil
+        nihai_liste = list(dict.fromkeys(girilen_semboller + FULL_LIST))
     
-    st.info(f"Toplam Taranacak Hisse Sayısı: {len(nihai_liste)} (Dışarıdan {len(girilen_semboller)} sembol işlendi)")
+    st.info(f"📊 Toplam Taranacak Hisse Sayısı: {len(nihai_liste)}")
 
     uygunlar1, uygunlar2, uygunlar3, uygunlar4, uygunlar5, uygunlar6 = [], [], [], [], [], []
     paket_sayisi = len(nihai_liste) // 50 + (1 if len(nihai_liste) % 50 != 0 else 0)
@@ -278,7 +295,7 @@ if st.button("Taramayı Başlat"):
                                 uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
                                 
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
-                if (0 < pb <= 2.5) and (0 < peg <= 1.2) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 50):
+                if (0 < pb <= 3) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 55):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
