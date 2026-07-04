@@ -295,7 +295,7 @@ if btn_sadece_kutu or btn_tum_liste:
                                 uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
                                 
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
-                if (0 < pb <= 3) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 55):
+                if (0 < pb <= 3) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 50) and (stoch.iloc[-1] <= 35):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
