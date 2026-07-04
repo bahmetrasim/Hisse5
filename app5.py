@@ -162,17 +162,31 @@ FULL_LIST = [
 
 # --- TARAMA MOTORU ---
 st.set_page_config(page_title="Anayasa v17", layout="centered")
-st.title("Yatırım Anayasası v17 (Sıfır Bağımlılık)")
+st.title("Yatırım Anayasası v17 (Özel Sembol Destekli)")
+
+# KULLANICI GİRDİSİ (YENİ EKLENDİ)
+ek_semboller_metni = st.text_input(
+    "Listeye Eklemek İstediğiniz Semboller (Virgülle ayırın):", 
+    placeholder="Örn: WDOFF, PLTR, BIST:THYAO"
+)
 
 if st.button("Taramayı Başlat"):
+    # 1. Kullanıcıdan gelen sembolleri temizle ve büyüt
+    girilen_semboller = [s.strip().upper() for s in ek_semboller_metni.split(',') if s.strip()]
+    
+    # 2. Girilen sembolleri FULL_LIST'in başına ekle ve kopyaları sil (dict.fromkeys sırayı korur)
+    nihai_liste = list(dict.fromkeys(girilen_semboller + FULL_LIST))
+    
+    st.info(f"Toplam Taranacak Hisse Sayısı: {len(nihai_liste)} (Dışarıdan {len(girilen_semboller)} sembol işlendi)")
+
     uygunlar1, uygunlar2, uygunlar3, uygunlar4, uygunlar5, uygunlar6 = [], [], [], [], [], []
-    paket_sayisi = len(FULL_LIST) // 50 + (1 if len(FULL_LIST) % 50 != 0 else 0)
+    paket_sayisi = len(nihai_liste) // 50 + (1 if len(nihai_liste) % 50 != 0 else 0)
     
     progress_bar = st.progress(0)
     status_text = st.empty()
     
-    for i in range(0, len(FULL_LIST), 50):
-        paket = FULL_LIST[i:i+50]
+    for i in range(0, len(nihai_liste), 50):
+        paket = nihai_liste[i:i+50]
         mevcut_paket_no = i//50 + 1
         status_text.write(f"⏳ İşleniyor: Paket {mevcut_paket_no} / {paket_sayisi} taranıyor...")
         
@@ -193,6 +207,7 @@ if st.button("Taramayı Başlat"):
                 close = df['Close']
                 son_kapanis = float(close.iloc[-1])
                 
+                # Fiyat filtresi
                 if son_kapanis > 50: continue
                 
                 # --- TEMEL VERİLER ---
@@ -219,12 +234,12 @@ if st.button("Taramayı Başlat"):
                 ema21 = close.ewm(span=21, adjust=False).mean()
                 
                 # UYGUNLAR 1 & 2 
-                if (0 < pb <= 2) and (0 < peg <= 1.2) and (rsi.iloc[-1] <= 50) and (stoch.iloc[-1] <= 30):
+                if (0 < pb < 1) and (0 < peg < 1) and (rsi.iloc[-1] <= 40) and (stoch.iloc[-1] <= 20):
                     uygunlar1.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
                 
-                if (0 < pb <=2 ) and (0 < peg <= 1.2) and \
+                if (0 < pb < 1) and (0 < peg < 1) and \
                    (float(ema9.iloc[-2]) <= float(ema21.iloc[-2])) and (float(ema9.iloc[-1]) > float(ema21.iloc[-1])) and \
-                   (rsi.iloc[-7:].min() <= 50) and (stoch.iloc[-7:].min() <= 30):
+                   (rsi.iloc[-7:].min() <= 40) and (stoch.iloc[-7:].min() <= 20):
                     uygunlar2.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
 
                 # UYGUNLAR 3 (Liste 1)
@@ -261,10 +276,9 @@ if st.button("Taramayı Başlat"):
                             z_score = hesapla_altman_z(ticker_obj, market_cap)
                             if z_score >= 3.0:
                                 uygunlar5.append({"Sembol": ticker, "Fiyat": son_kapanis, "Z-Skor": round(z_score, 2)})
-
+                                
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ---
-                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 13) and (rsi.iloc[-1] <= 50):
-                    # API'yi yormamak için sadece bu temel ön filtreleri geçenlerin bilançosunu çekiyoruz
+                if (0 < pb <= 2.5) and (0 < peg <= 1.2) and (ev_ebitda <= 15) and (rsi.iloc[-1] <= 50):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
@@ -287,7 +301,6 @@ if st.button("Taramayı Başlat"):
     progress_bar.empty()
     st.success("✅ Tarama Tamamlandı!")
     
-    # Streamlit Güncellemesi Çözümü: use_container_width=True yerine width='stretch' kullanıldı.
     st.subheader(f"1. Temel Değer Odaklı ({len(uygunlar1)} Hisse)")
     st.dataframe(pd.DataFrame(uygunlar1), width='stretch')
     
@@ -302,6 +315,6 @@ if st.button("Taramayı Başlat"):
     
     st.subheader(f"5. Zırhlı Trend Dönüşü - Liste 3 ({len(uygunlar5)} Hisse)")
     st.dataframe(pd.DataFrame(uygunlar5), width='stretch')
-
+    
     st.subheader(f"6. Esnek Fırsat Avcısı (Yumuşatılmış Kombinasyon) ({len(uygunlar6)} Hisse)")
     st.dataframe(pd.DataFrame(uygunlar6), width='stretch')
