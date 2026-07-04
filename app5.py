@@ -169,10 +169,16 @@ if st.button("Taramayı Başlat"):
         mevcut_paket_no = i//50 + 1
         status_text.write(f"⏳ İşleniyor: Paket {mevcut_paket_no} / {paket_sayisi} taranıyor...")
         
-        for ticker in paket:
+      for ticker in paket:
             try:
-                time.sleep(0.5) 
-                ticker_obj = yf.Ticker(ticker)
+                time.sleep(0.5)
+                
+                # Yahoo Finance formatı düzeltmesi: Noktaları tireye çevir 
+                # (Örn: MOG.A -> MOG-A, BRK.B -> BRK-B, BF.B -> BF-B)
+                yf_ticker = ticker.replace('.', '-')
+                
+                # Veriyi çekerken düzeltilmiş "yf_ticker" kullanıyoruz!
+                ticker_obj = yf.Ticker(yf_ticker)
                 
                 df = ticker_obj.history(period="6mo")
                 info = ticker_obj.info
