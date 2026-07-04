@@ -10,8 +10,7 @@ warnings.filterwarnings("ignore")
 # 1.8'in altının ise yüksek iflas riskini (Distress) temsil ettiğini göstermektedi
 
 # F-Skoru 7, 8 veya 9 olan 50 USD altındaki hisseler, piyasanın korkusuna rağmen olağanüstü defansif yapılara ve iyileşen bir iş modeline sahiptir.
-# P/B ortalama 5
-# 
+# P/B ortalama S&P500 => 5 Midcap 400 => 2.5
 
 # --- İNDİKATÖR & FİNANSAL FONKSİYONLAR (SAF PANDAS İLE) ---
 def hesapla_rsi(veri, periyot=14):
@@ -223,7 +222,7 @@ if st.button("Taramayı Başlat"):
                 if (0 < pb <= 2) and (0 < peg <= 1.2) and (rsi.iloc[-1] <= 50) and (stoch.iloc[-1] <= 30):
                     uygunlar1.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
                 
-                if (0 < pb <=2 1) and (0 < peg <= 1.2) and \
+                if (0 < pb <=2 ) and (0 < peg <= 1.2) and \
                    (float(ema9.iloc[-2]) <= float(ema21.iloc[-2])) and (float(ema9.iloc[-1]) > float(ema21.iloc[-1])) and \
                    (rsi.iloc[-7:].min() <= 50) and (stoch.iloc[-7:].min() <= 30):
                     uygunlar2.append({"Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg})
