@@ -1,6 +1,5 @@
 streamlit
 yfinance
-pandas
+pandas<2.2.0
+numpy<2.0.0
 pandas-ta
-html5lib
-beautifulsoup4
