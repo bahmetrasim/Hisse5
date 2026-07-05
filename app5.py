@@ -360,7 +360,7 @@ if btn_sadece_kutu or btn_tum_liste or btn_small_cap:
                 
                 if (0 < pb <= 1.5) and (0 < peg <= 1) and \
                    (float(ema9_serisi.iloc[-2]) <= float(ema21_serisi.iloc[-2])) and (float(ema9_serisi.iloc[-1]) > float(ema21_serisi.iloc[-1])) and \
-                   (rsi_serisi.iloc[-7:].min() <= 40) and (stoch_serisi.iloc[-7:].min() <= 20):
+                   (rsi_serisi.iloc[-2:].min() <= 40) and (stoch_serisi.iloc[-2:].min() <= 20):
                     uygunlar2.append({
                         "Sembol": ticker, "Fiyat": son_kapanis, "P/B": pb, "PEG": peg,
                         "RSI": son_rsi, "Stoch": son_stoch, "EMA 9": son_ema9
@@ -413,7 +413,7 @@ if btn_sadece_kutu or btn_tum_liste or btn_small_cap:
                                 })
                                 
                 # --- UYGUNLAR 6: Esnek Fırsat Avcısı ---
-                if (0 < pb <= 2.5) and (0 < peg <= 1.5) and (ev_ebitda <= 15) and (son_rsi <= 50) and (son_stoch <= 40):
+                if (0 < pb <= 2) and (0 < peg <= 1) and (ev_ebitda <= 15) and (son_rsi <= 50) and (son_stoch <= 30):
                     p_skor = hesapla_piotroski(ticker_obj)
                     z_skor = hesapla_altman_z(ticker_obj, market_cap)
                     
