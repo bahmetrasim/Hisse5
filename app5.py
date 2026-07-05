@@ -7,9 +7,7 @@ warnings.filterwarnings("ignore")
 
 # Z-Skorunun 3.0'ın üzerinde olması şirketin "Güvenli Bölge"de (Safe Zone) olduğunu,
 # 1.8 ile 3.0 arasının riskin başladığı "Gri Bölge"yi (Grey Zone),
-# 1.8'in altının ise yüksek iflas riskini (Distress) temsil ettiğini göstermektedi
-
-# F-Skoru 7, 8 veya 9 olan 50 USD altındaki hisseler, piyasanın korkusuna rağmen olağanüstü defansif yapılara ve iyileşen bir iş modeline sahiptir.
+# 1.8'in altının ise yüksek iflas riskini (Distress) temsil ettiğini göstermektedir.
 # P/B ortalama S&P500 => 5 Midcap 400 => 2.5
 
 # --- İNDİKATÖR & FİNANSAL FONKSİYONLAR (SAF PANDAS İLE) ---
@@ -154,15 +152,109 @@ def hesapla_altman_z(ticker_obj, market_cap):
     except:
         return 0
 
-# --- SABİT LİSTE ---
+# --- SABİT LİSTELER ---
+
 FULL_LIST = [
     "NVDA", "AAPL", "MSFT", "AMZN", "GOOGL", "GOOG", "AVGO", "TSLA", "META", "MU", "LLY", "BRK.B", "AMD", "WMT", "JPM", "INTC", "V", "JNJ", "AMAT", "XOM", "LRCX", "CAT", "CSCO", "MA", "ABBV", "ORCL", "COST", "BAC", "KLAC", "GE", "UNH", "KO", "HD", "PG", "CVX", "SNDK", "MS", "MRK", "GEV", "NFLX", "GS", "PM", "PLTR", "PANW", "DELL", "TXN", "IBM", "MRVL", "WFC", "RTX", "LIN", "C", "AXP", "WDC", "APH", "GLW", "ANET", "STX", "QCOM", "AMGN", "ADI", "CRWD", "MCD", "PEP", "TMO", "NEE", "TMUS", "VZ", "APP", "DE", "BA", "DIS", "TJX", "ETN", "UNP", "WELL", "SCHW", "ABT", "GILD", "BLK", "UBER", "T", "ISRG", "BX", "HON", "BKNG", "PFE", "DHR", "CB", "CVS", "PGR", "CRM", "PLD", "VRT", "COP", "VRTX", "COF", "LOW", "PH", "MO", "SYK", "SPGI", "BMY", "SBUX", "LMT", "FTNT", "SO", "TT", "PWR", "HWM", "EQIX", "CDNS", "MDT", "NOW", "NEM", "BNY", "DUK", "PNC", "CMI", "MAR", "GD", "USB", "MNST", "DDOG", "WMB", "UPS", "FCX", "HOOD", "JCI", "WM", "ADP", "CEG", "CSX", "MCK", "CMCSA", "HCA", "ABNB", "RCL", "SNPS", "ELV", "SHW", "MMM", "KKR", "DASH", "ADBE", "EMR", "MRSH", "CME", "MCO", "ECL", "VLO", "ITW", "AMT", "ORLY", "COHR", "ACN", "HLT", "MDLZ", "MPC", "AEP", "TER", "FDX", "TDG", "CI", "CL", "SPG", "KMI", "NOC", "CRH", "INTU", "NSC", "AON", "NXPI", "URI", "TRV", "ICE", "EOG", "SLB", "GM", "FIX", "MSI", "PSX", "CIEN", "ROST", "CTAS", "LITE", "MPWR", "WBD", "APO", "RSG", "APD", "REGN", "GWW", "PCAR", "DLR", "BSX", "TFC", "ALL", "NKE", "DAL", "CARR", "SRE", "D", "KEYS", "AFL", "FLEX", "TGT", "TEL", "HPE", "TRGP", "AJG", "O", "CTVA", "PSA", "CAH", "OKE", "BKR", "F", "AME", "FAST", "COR", "ROK", "MET", "LHX", "ETR", "VST", "EW", "AZO", "EA", "FITB", "NUE", "XEL", "FANG", "MCHP", "EBAY", "OXY", "EXC", "DVN", "HUM", "STT", "TTWO", "CVNA", "DHI", "WAB", "GRMN", "XYZ", "KDP", "ODFL", "NDAQ", "AXON", "UAL", "YUM", "VTR", "CCL", "CMG", "LYV", "BDX", "IDXX", "ED", "AMP", "PEG", "ADSK", "MSCI", "JBL", "AIG", "SYY", "IBKR", "CBRE", "WEC", "COIN", "VMC", "PYPL", "IRM", "PRU", "PCG", "A", "ADM", "EME", "KVUE", "ON", "WAT", "KMB", "HIG", "HBAN", "HSY", "PAYX", "MTB", "ACGL", "MLM", "ROP", "Q", "KR", "CCI", "EQT", "STLD", "NTRS", "IR", "BIIB", "IQV", "DTE", "CNC", "AEE", "EXPE", "NRG", "EXR", "TDY", "LVS", "DOV", "NTAP", "ZTS", "WDAY", "SATS", "TPL", "TPR", "CFG", "RJF", "CASY", "CNP", "GEHC", "EIX", "ATO", "CINF", "VICI", "VEEV", "HAL", "EL", "KHC", "RMD", "MRNA", "XYL", "WSM", "FE", "PPL", "FICO", "HUBB", "ES", "OTIS", "JBHT", "PPG", "AVB", "WRB", "DXCM", "PHM", "AWK", "RF", "FISV", "CPRT", "MTD", "SYF", "EQR", "DG", "FSLR", "CBOE", "WST", "LUV", "KEY", "ARES", "WTW", "TROW", "SW", "RL", "CMS", "FFIV", "DGX", "VRSK", "DRI", "L", "PFG", "DLTR", "STZ", "LH", "CHD", "NI", "VRSN", "FDXF", "INCY", "LEN", "CHRW", "EXE", "VLTO", "BRO", "CPAY", "EXPD", "PKG", "BG", "SNA", "OMC", "STE", "HPQ", "AMCR", "TSN", "IP", "EVRG", "ROL", "LII", "FIS", "LNT", "DOW", "IFF", "GPN", "ULTA", "SMCI", "SBAC", "ESS", "VTRS", "EFX", "GIS", "FTV", "DD", "NVR", "CTSH", "INVH", "CDW", "BEN", "KIM", "GNRC", "WY", "AKAM", "CHTR", "LYB", "NDSN", "CF", "IEX", "BALL", "TSCO", "MAS", "HST", "MAA", "ZBH", "GPC", "ALB", "TXT", "BBY", "BR", "TKO", "GEN", "DOC", "J", "REG", "SWK", "DVA", "EG", "COO", "GL", "DECK", "HRL", "MKC", "AIZ", "SOLV", "PNW", "PTC", "UDR", "APTV", "LULU", "LDOS", "AVY", "ERIE", "BF.B", "PNR", "ZBRA", "RVTY", "MGM", "SJM", "ALLE", "TYL", "ALGN", "TRMB", "IVZ", "HAS", "CSGP", "APA", "CPT", "CLX", "GDDY", "PSKY", "HII", "BAX", "TECH", "CRL", "FRT", "BXP", "PODD", "AES", "SWKS", "FOXA", "FOX", "WYNN", "DPZ", "JKHY", "NCLH", "BLDR", "HSIC", "ARE", "NWSA", "UHS", "IT", "AOS", "TTD", "FDS", "TAP", "MOS", "CAG", 
     "NWS", "MTZ", "TWLO", "CRS", "MTSI", "MKSI", "ILMN", "CW", "ATI", "NVT", "ENTG", "FTI", "WWD", "ROIV", "STRL", "XPO", "P", "UTHR", "OKTA", "USFD", "SNX", "DKS", "SN", "AMKR", "ROKU", "ULS", "LSCC", "RBC", "BURL", "TTMI", "RS", "FN", "SITM", "H", "TLN", "APG", "PFGC", "EWBC", "ONTO", "BWXT", "RGLD", "NBIX", "ITT", "NLY", "CDE", "WCC", "VICR", "WSO", "NXT", "SGI", "WPC", "THC", "LAMR", "CLH", "DOCN", "PR", "TOL", "CSL", "MEDP", "VNOM", "PNFP", "DY", "DTM", "OVV", "JAZZ", "ARMK", "RRX", "CG", "SMTC", "JLL", "ALLY", "LECO", "UNM", "OHI", "CNH", "RPM", "AA", "RGA", "WMG", "TRU", "EVR", "NTNX", "RNR", "EXEL", "MLI", "BWA", "MOG.A", "RMBS", "AEIS", "CRBG", "SOLS", "GLPI", "DT", "SANM", "FNF", "COKE", "DINO", "TXRH", "CR", "KNX", "GGG", "OC", "ELS", "BROS", "EQH", "CCK", "PEN", "ALGM", "ELAN", "AIT", "WBS", "PINS", "AMH", "FHN", "WTS", "SPXC", "AAL", "WMS", "LAD", "CYTK", "VIAV", "AFG", "NYT", "BJ", "GMED", "CGNX", "LFUS", "SAIA", "ARWR", "BMRN", "AYI", "VMI", "EGP", "CART", "ARW", "WTRG", "AM", "WTFC", "UMBF", "AR", "SCI", "SF", "SEIC", "HL", "RYAN", "AAON", "DCI", "R", "ZION", "OGE", "ORI", "CACI", "BLD", "GWRE", "EHC", "GTLS", "JEF", "TKR", "ONB", "GME", "MUSA", "BRX", "FIVE", "SIRI", "SSB", "MP", "CFR", "OSK", "WLK", "CTRE", "CAVA", "SARO", "FCFS", "FLS", "TTC", "CNM", "COLB", "ENSG", "ADC", "CUBE", "HLI", "HALO", "BRKR", "WAL", "AMG", "BSY", "NNN", "ACM", "PRI", "KTOS", "AGCO", "SSD", "DOCU", "ALV", "RRC", "CBSH", "DAR", "IDA", "TEX", "FR", "VOYA", "ENS", "MANH", "VLY", "JHG", "ATR", "CHWY", "BIO", "MIDD", "HIMS", "RGEN", "REXR", "SFM", "KNSL", "CELH", "THG", "FLR", "TTEK", "STAG", "UGI", "NFG", "HXL", "BAH", "VNO", "PB", "CRUS", "KEX", "HQY", "AXTA", "NEU", "SLAB", "AVT", "CMC", "IDCC", "HR", "LNTH", "LSTR", "AVAV", "EXP", "FAF", "PPC", "AVTR", "FNB", "ST", "ORA", "GBCI", "GAP", "LEA", "ACI", "BYD", "LAD", "MSA", "NOV", "TMHC", "VFC", "CHRD", "RYN", "MSM", "WH", "SWX", "M", "CHDN", "GATX", "FND", "AN", "TXNM", "UBSI", "STWD", "FLG", "CROX", "MTDR", "DBX", "CHE", "FBIN", "HWC", "POR", "INGR", "ESAB", "ESNT", "MTG", "CVLT", "MORN", "KRG", "SIGI", "WFRD", "GXO", "HOMB", "ALK", "NJR", "BKH", "PCTY", "OZK", "LPX", "NOVT", "BC", "APPF", "PATH", "SON", "PBF", "PSN", "CAR", "DUOL", "RLI", "GNTX", "CLF", "AHR", "NXST", "UFPI", "TREX", "VAL", "ASB", "CHH", "PEGA", "VVV", "SHC", "GHC", "CUZ", "FFIN", "OGS", "DLB", "SLM", "SBRA", "SLGN", "KNF", "CNO", "MUR", "TNL", "HRB", "MTN", "SAIC", "WEX", "BBWI", "IBOC", "G", "CNX", "IPGP", "SR", "CBT", "BDC", "LIVN", "SYNA", "QLYS", "EPR", "WING", "FCN", "TCBI", "KRC", "NWE", "NVST", "OLLI", "FHI", "KBR", "HGV", "HLNE", "ELF", "CDP", "THO", "PLNT", "POST", "PII", "VNT", "OLED", "MAT", "ANF", "IRT", "SMG", "KBH", "EXLS", "FOUR", "YETI", "BCO", "DOCS", "LOPE", "BHF", "BILL", "NSA", "GEF", "HAE", "PVH", "AVNT", "OPCH", "MZTI", "COLM", "GPK", "RH", "ASH", "PK", "EXPO", "MMS", "CXT", "EEFT", "HOG", "VC", "KD", "WHR", "OLN", "CPRI", "XRAY", "GT", "SAM"
 ]
 
+# Kendi belirlediğiniz Small Cap hisselerini bu listeye ekleyebilirsiniz
+SMALL_CAP_LIST = [
+    "KRT", "PXED", "ARTNA", "HZO", "GCBC", "AVBP", "AMN", "EPAC", "OXM", "SBSI", 
+    "AMSF", "FNLC", "AIP", "CBZ", "MPB", "VTVT", "NGNE", "WASH", "IBTA", "CBNK", 
+    "BOT", "PZZA", "LPG", "IBCP", "MCBS", "PKOH", "DIN", "COLL", "PSIX", "MPLT", 
+    "AMSC", "AOSL", "TEN", "BY", "ETON", "BFS", "MOV", "OBT", "RGR", "BHB", 
+    "NSSC", "PKE", "BBSI", "SMP", "TECX", "CCSI", "XRN", "URGN", "GSL", "CPF", 
+    "LQDT", "PRGS", "CENTA", "PNTG", "SLVM", "PEBO", "RIGL", "MAN", "ADV", "ONIT", 
+    "RAPP", "FSUN", "CSV", "FISI", "NGS", "WEYS", "LZB", "TCBX", "WOLF", "VALU", 
+    "DCOM", "RCKY", "CEVA", "APOG", "CRI", "ORRF", "ISBA", "LOB", "BSRR", "AROW", 
+    "VTOL", "RM", "ALCO", "TRS", "SNDA", "VLGEA", "SPFI", "HROW", "FSTR", "TYG", 
+    "SWMR", "XOMA", "UVE", "OMCL", "CYD", "JOUT", "ROCK", "CVLG", "GOLD", "SION", 
+    "STAA", "BKSY", "BZH", "BLFS", "FCEL", "HELE", "DMC", "HSTM", "BMRC", "CIVB", 
+    "PCB", "BETR", "BWMN", "NXRT", "IPX", "KMPR", "PLAB", "HIPO", "STRZ", "BCAX", 
+    "MCTA", "CDNA", "FLNG", "MVBF", "CDRE", "CWCO", "ISTR", "EVTC", "HFWA", "RDWR", 
+    "AVLN", "SMC", "BL", "IIIN", "CMP", "DMRA", "CVEO", "BLKB", "MSBI", "STRO", 
+    "TYRA", "BFST", "FMAO", "FOR", "TBN", "LWAY", "COAG", "ALRS", "WGO", "MAZE", 
+    "OFLX", "TCMD", "YORW", "WYFI", "BOW", "BBW", "MYE", "AKTS", "BRUN", "ATRC", 
+    "GBFH", "MMI", "HY", "WS", "IBEX", "HBT", "NWFL", "HAFC", "IMCR", "GLOB", 
+    "REPX", "CNOB", "NGVC", "CTEV", "MYFW", "FCCO", "PKBK", "AVBH", "CARE", "GCO", 
+    "GCT", "GIC", "WKC", "PAHC", "WILC", "CBK", "LBRX", "BCML", "IDR", "GIII", 
+    "MEC", "IPI", "SMA", "CCNE", "THRM", "CNMD", "COFS", "CLFD", "SEPN", "SKYT", 
+    "SNDX", "DRD", "VBNK", "BXDC", "TBLD", "GLSI", "KELYB", "UMAC", "FTK", "JMSB", 
+    "INVA", "SAR", "WLKP", "OMDA", "GLIBK", "ENOV", "CAPL", "NRC", "NVRI", "RVLV", 
+    "HBB", "GLIBA", "TWIN", "FTH", "SHBI", "MCS", "CAPR", "OSBC", "FIVN", "ARQQ", 
+    "CNXC", "CZNC", "CSWC", "HQ", "MCFT", "CLMB", "AORT", "AEVA", "RYZ", "INVX", 
+    "CSTL", "EDN", "DLX", "APPN", "GNK", "ANRO", "PBT", "PSTL", "ATNI", "EVER", 
+    "AVNS", "HVT", "LIME", "GBLI", "MBUU", "KE", "BIOA", "HCSG", "OLP", "FRPH", 
+    "AMTB", "DMLP", "PCRX", "AMRC", "ASIC", "AAT", "DEA", "ELA", "CIX", "GRPN", 
+    "LYTS", "MSB", "TWFG", "AZTA", "ALMR", "LIND", "TBRG", "ZYME", "LEGH", "CPS", 
+    "YELP", "MATW", "COSO", "TRUP", "CWBC", "KMTS", "GHRS", "WTBA", "HRTG", "NRIM", 
+    "SEG", "RBB", "EPC", "ZBIO", "DSGR", "WHK", "EGBN", "NECB", "IGIC", "ASMB", 
+    "ODD", "NOG", "BWMX", "IART", "HMH", "CMDB", "AAPG", "TIPT", "DCBO", "QDEL", 
+    "PRAA", "CHCT", "TITN", "ISSC", "SLP", "SPIR", "TH", "GRRR", "VEL", "APC", 
+    "MAMA", "XZO", "CLPT", "FRBT", "ADNT", "ASYS", "JCAP", "AVTX", "ALMU", "TRC", 
+    "MUX", "MLTX", "NPB", "WSR", "SGP", "CRTO", "OCFC", "PAR", "CCXI", "NVGS", 
+    "MRAM", "MITK", "FBYD", "AII", "DGICA", "TRAX", "VIA", "FDUS", "OOMA", "GLAD", 
+    "CBLL", "NVCT", "LIFE", "AMPH", "EYE", "HBNC", "UPBD", "OPRA", "DAKT", "KIDS", 
+    "NNE", "CMCL", "PDLB", "CBAN", "ASIX", "USCB", "RMR", "SPTX", "VOR", "WSBF", 
+    "PINE", "FLOC", "YSWY", "FLGT", "BCAL", "FVR", "FBRX", "ONT", "PRCT", "AVBC", 
+    "NBBK", "ARL", "SI", "RJET", "OFRM", "MLKN", "BWB", "NATR", "EBF", "NTGR", 
+    "JBIO", "USNA", "CTO", "CCEC", "ETD", "IIIV", "RMIX", "ENR", "DGICB", "BUUU", 
+    "ULH", "CNNE", "NFBK", "AGCC", "INMD", "NHP", "ORN", "ASC", "HTLD", "NEGG", 
+    "SWBI", "XNCR", "EFTY", "YB", "BOC", "SHOE", "CTNM", "ENTA", "NEO", "BWAY", 
+    "NGL", "PRCH", "CRVS", "PWRL", "AFYA", "MEI", "SIFY", "TNDM", "MSDL", "RNGR", 
+    "SBGI", "ITG", "QFIN", "TENX", "JBGS", "VTS", "CYRX", "GPRE", "UMH", "JANX", 
+    "GAIN", "KRNT", "BLZE", "VELO", "DSGN", "ADUR", "OSS", "NREF", "IRS", "DBVT", 
+    "FRST", "QNST", "JKS", "SDHC", "NODK", "NPCE", "HNRG", "AMRN", "SAFE", "GLRE", 
+    "PWP", "WWW", "FOXF", "LOCO", "MG", "ODTX", "BBNX", "DFH", "SDGR", "HPP", 
+    "TBPH", "MGPI", "NX", "CBIO", "ELE", "SIBN", "LXFR", "JACK", "NVCR", "MNRO", 
+    "CTGO", "FTRE", "PBFS", "TSLX", "MQ", "ELMT", "MRTN", "FVCB", "MLP", "MTUS", 
+    "PLTS", "SPH", "CGEM", "EFOR", "FRBA", "NCNO", "PGY", "TRIN", "PHOE", "ESOA", 
+    "AMPX", "SOHU", "LMRI", "ADSE", "AVO", "GLAS", "INR", "MTW", "MTRX", "EIKN", 
+    "MAGN", "DAO", "GOOD", "BCSF", "OLMA", "NCDL", "NNNN", "ADTN", "AGMB", "APPS", 
+    "VITL", "ACEL", "GILT", "SGU", "CLYM", "NOA", "FCBM", "METC", "DSP", "EVMN", 
+    "ARLO", "CCOI", "FDMT", "CLDT", "NEXA", "ANGO", "EVC", "KELYA", "FWRG", "ASST", 
+    "HLF", "CIM", "CNL", "CCRN", "DCTH", "BNTC", "DRTS", "SD", "WNC", "ALOY", 
+    "RGNX", "GDOT", "MAX", "FWRD", "EFC", "CMCO", "PUBM", "SHEN", "HOPE", "KBDC", 
+    "CMPS", "PSNL", "SONO", "MOBI", "SMPL", "PHAR", "STRW", "BRBR", "MGTX", "GMTL", 
+    "EYPT", "ZVRA", "DOLE", "LYEL", "HLIT", "OCS", "HSHP", "SBH", "GEL", "ALIT", 
+    "CMRE", "VSTS", "TRIP", "DEC", "NPKI", "MESO", "XPRO", "BV", "VHI", "OSPN", 
+    "CSIQ", "AESI", "KRP", "GMRS", "IMXI", "LPTH", "NEWT", "GNE", "FMNB", "BALY", 
+    "BCAR", "RAC", "TACO", "KFII", "DRDB", "TVA", "RNAC", "SFL", "GTEN", "CODI", 
+    "RTAC", "VREX", "LXU", "DMAA", "JACS", "BEAG", "CXII", "FENC", "LPBB", "CRNC", 
+    "ALDF", "AHCO", "ARDT", "GRAF", "POLE", "LSPD", "FVRR", "PMT", "SUJA", "HUN", 
+    "MBAV", "SLDB", "LPAA", "BACC", "GPAT", "OPTX", "LE", "ALF", "ATII", "CGBD", 
+    "CCIX", "PHR", "ZSQR", "NHIC", "CRESY", "DSL", "PRGO", "PLAY", "PICS", "KURA", 
+    "PAX", "SVCO", "BBCP", "RMAX", "CCAP", "MNTN", "PHAT", "TSSI", "CARS", "CARL", 
+    "FMC", "CRD.A", "NOMD", "ANSC", "DV", "CLB", "DDI", "MSIF", "ACIC", "REAL", 
+    "REPL", "ABSI", "ORIC", "WBTN", "CAL", "BW", "LOMA", "RLJ", "NSLR", "VMET", 
+    "ECVT", "AEXA", "ABX", "CPAC", "LEG", "FTW", "INNV", "VMD", "SIND", "TWO", 
+    "AEBI", "PUMP", "BNED", "OCSL", "DQ", "HDL", "SGML", "XIFR", "SLRC", "TXO", 
+    "VHCP", "AACI", "AEAQ", "ARCI", "HCIC", "KRAQ", "TMTS", "LADR", "BIXI", "MESH", 
+    "ITHA", "NOAH", "HACQ", "ISOU", "MZYX", "VIR", "EVOX", "SAC", "YICC", "AAC", 
+    "GIW", "APXT", "KEYY", "BDCI", "DMII", "OSPR", "CAES", "GHXI", "RNGT", "BLZR", 
+    "SBXE", "DSAC", "KBON", "KOYN", "CMII", "CRAN", "FVAV", "MTAL", "NWAX", "QMCO", 
+    "EVAC", "GCGR", "GUAC", "MBVI", "VACI", "ACAA", "FUBO", "IEAG", "OIM", "SAAQ", 
+    "RSVR", "SVAC", "DUOT", "FAC", "AVR", "OBA", "AMCX", "LWAC", "BCSS", "FCRS", 
+    "FISN", "WENN", "CLBR", "KCAC", "SVIV", "HCMA", "PCAP", "OYSE", "TK", "CRAQ", 
+    "BLUW", "IMMX", "RDAG", "IPCX", "JENA", "SOUL", "NPAC", "BBCQ", "CEPV", "IPFX", 
+    "SZZL", "TLNC", "ARI", "GO", "KCHV", "SLN", "CCII", "CEPF", "DNA", "SDHI", 
+    "RCAT", "TACH", "PMTR", "XRPN", "FERA", "PSBD", "BVS", "CRD.B", "KRSP", "KWY", 
+    "BTX", "WEN", "NAVI", "ARHS", "FLO", "LAND", "MASS", "BLMN", "VYX", "CRMD", 
+    "POET", "SG", "AZUL", "TDAY", "AMPL", "ERII", "UP", "KYTX", "CRSR", "ATEC", 
+    "XMAX", "ILPT", "CGNT", "NMAX", "VET", "AI", "GPRK", "AVAH", "MFI", "ADAM", 
+    "WLTH", "UPWK", "TTI", "KRNY", "PERI", "NRDS", "MFA", "ANL", "RLGT", "IE", 
+    "NEXN", "SUPV", "CDRO", "CRML", "GSBD", "GOOS", "ARTV", "PDM", "AGRO", "ELVA", 
+    "PRTA", "NVAX", "TRLV", "OI", "SSTK", "CADL", "VINP", "RREV", "DXC", "IACO", 
+    "ILLU", "MEVO", "GIX", "LEGO", "OFIX", "PTOR", "AACO", "MLAA", "OTLY", "SHLS", 
+    "ALOV", "CAQ", "OPFI", "ZKP", "SKYH", "SVV", "DBCA", "EVCM", "PD", "SORN", 
+    "MFIC", "ARTC", "FIGS", "KNOP"
+]
+
 # --- TARAMA MOTORU ---
 st.set_page_config(page_title="Anayasa v17", layout="centered")
-st.title("Yatırım Anayasası v17 (Özel Sembol Destekli)")
+st.title("Yatırım Anayasası v17 (Özel Sembol & Small Cap)")
 
 # KULLANICI GİRDİSİ 
 ek_semboller_metni = st.text_input(
@@ -170,15 +262,17 @@ ek_semboller_metni = st.text_input(
     placeholder="Örn: WDOFF, PLTR, BIST:THYAO"
 )
 
-# YAN YANA İKİ BUTON TASARIMI
-col1, col2 = st.columns(2)
+# YAN YANA ÜÇ BUTON TASARIMI
+col1, col2, col3 = st.columns(3)
 with col1:
     btn_sadece_kutu = st.button("Sadece Kutudakileri Tara", use_container_width=True)
 with col2:
     btn_tum_liste = st.button("Kutu + Full Listeyi Tara", use_container_width=True)
+with col3:
+    btn_small_cap = st.button("Kutu + Small Cap Tara", use_container_width=True)
 
-# İki butondan herhangi birine basılırsa tarama tetiklenir
-if btn_sadece_kutu or btn_tum_liste:
+# Butonlardan herhangi birine basılırsa tarama tetiklenir
+if btn_sadece_kutu or btn_tum_liste or btn_small_cap:
     
     # Metin kutusundaki veriyi temizleyip listeye çevir
     girilen_semboller = [s.strip().upper() for s in ek_semboller_metni.split(',') if s.strip()]
@@ -188,10 +282,14 @@ if btn_sadece_kutu or btn_tum_liste:
         nihai_liste = list(dict.fromkeys(girilen_semboller))
         if len(nihai_liste) == 0:
             st.warning("⚠️ Lütfen taramak için kutuya en az bir sembol girin!")
-            st.stop() # Hata vermemek için kodun aşağıya inmesini engeller
-    else:
-        # Full liste butonu basıldıysa ikisini birleştirip kopyaları sil
+            st.stop()
+    elif btn_tum_liste:
         nihai_liste = list(dict.fromkeys(girilen_semboller + FULL_LIST))
+    elif btn_small_cap:
+        nihai_liste = list(dict.fromkeys(girilen_semboller + SMALL_CAP_LIST))
+        if len(nihai_liste) == 0:
+            st.warning("⚠️ Small Cap listesi boş ve kutuda sembol yok!")
+            st.stop()
     
     st.info(f"📊 Toplam Taranacak Hisse Sayısı: {len(nihai_liste)}")
 
@@ -212,9 +310,7 @@ if btn_sadece_kutu or btn_tum_liste:
                 
                 # Yahoo Finance formatı düzeltmesi: Noktaları tireye çevir 
                 yf_ticker = ticker.replace('.', '-')
-                
                 ticker_obj = yf.Ticker(yf_ticker)
-                
                 df = ticker_obj.history(period="6mo")
                 info = ticker_obj.info
                 
@@ -223,8 +319,9 @@ if btn_sadece_kutu or btn_tum_liste:
                 close = df['Close']
                 son_kapanis = float(close.iloc[-1])
                 
-                # Fiyat filtresi
-                if son_kapanis > 50: continue
+                # V.I.P GEÇİŞ: Kutudan manuel yazılan semboller 50 Dolar kuralına takılmaz
+                if son_kapanis > 50 and ticker not in girilen_semboller:
+                    continue
                 
                 # --- TEMEL VERİLER ---
                 pb = info.get('priceToBook', 999)
@@ -242,7 +339,7 @@ if btn_sadece_kutu or btn_tum_liste:
                 target_price = info.get('targetMeanPrice', 0)
                 target_price = target_price if target_price is not None else 0
 
-                # --- ORTAK TEKNİK VERİLER (TABLOLAR İÇİN DE KULLANILACAK) ---
+                # --- ORTAK TEKNİK VERİLER ---
                 high = df['High']
                 low = df['Low']
                 rsi_serisi = hesapla_rsi(close)
@@ -250,7 +347,6 @@ if btn_sadece_kutu or btn_tum_liste:
                 ema9_serisi = close.ewm(span=9, adjust=False).mean()
                 ema21_serisi = close.ewm(span=21, adjust=False).mean()
                 
-                # Son gün verileri
                 son_rsi = round(float(rsi_serisi.iloc[-1]), 2)
                 son_stoch = round(float(stoch_serisi.iloc[-1]), 2)
                 son_ema9 = round(float(ema9_serisi.iloc[-1]), 2)
